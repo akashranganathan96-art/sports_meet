@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "npm run db:push && npm run db:seed && prisma generate && next build --turbopack",
-    "start": "next start",
-    "lint": "eslint",
     "db:push": "prisma db push",
     "db:seed": "node prisma/seed.js",
+    "generate": "prisma generate",
+    "build": "npm run db:push && npm run db:seed && npm run generate && next build --turbopack",
+    "dev": "next dev --turbopack",
+    "start": "next start",
+    "lint": "eslint",
     "db:studio": "prisma studio"
   },
   "dependencies": {
