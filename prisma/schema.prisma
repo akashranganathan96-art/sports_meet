@@ -1,0 +1,134 @@
+// Enhanced schema with player profiles and match management
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  secretCode  String   @unique
+  role        UserRole @default(USER)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Enhanced player profile
+  fullName    String?
+  gender      Gender?
+  isActive    Boolean  @default(true)
+  
+  // Relations
+  votes       Vote[]
+  playerMatches PlayerMatch[]
+  
+  @@map("users")
+}
+
+model Game {
+  id          String     @id @default(cuid())
+  name        String
+  type        String
+  category    GameCategory
+  icon        String
+  description String?
+  isActive    Boolean    @default(true)
+  createdAt   DateTime  @default(now())
+  
+  // Relations
+  votes       Vote[]
+  matches     Match[]
+  
+  @@map("games")
+}
+
+model Vote {
+  id      String @id @default(cuid())
+  userId  String
+  gameId  String
+  createdAt DateTime @default(now())
+  
+  // Relations
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game    Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, gameId])
+  @@map("votes")
+}
+
+model Match {
+  id          String      @id @default(cuid())
+  gameId      String
+  scheduledAt DateTime?
+  status      MatchStatus @default(SCHEDULED)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  // Relations
+  game        Game        @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  players     PlayerMatch[]
+  
+  @@map("matches")
+}
+
+model PlayerMatch {
+  id       String @id @default(cuid())
+  matchId  String
+  userId   String
+  result   MatchResult?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  match    Match  @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([matchId, userId])
+  @@map("player_matches")
+}
+
+model Team {
+  id          String @id @default(cuid())
+  name        String @unique
+  captain     String
+  viceCaptain String
+  color       String
+  createdAt   DateTime @default(now())
+  
+  @@map("teams")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum GameCategory {
+  INDOOR
+  OUTDOOR
+  TRACK
+  FIELD
+  FUN
+}
+
+enum MatchStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum MatchResult {
+  WIN
+  LOSS
+  DRAW
+}
