@@ -7,6 +7,7 @@ const { verifyToken } = require("./src/lib/auth");
  */
 function middleware(request) {
   const token = request.cookies.get("auth-token")?.value;
+  
   const { pathname } = request.nextUrl;
 
   // Skip middleware for static files, API routes, and favicon

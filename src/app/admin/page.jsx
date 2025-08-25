@@ -1,20 +1,20 @@
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
-import { verifyToken } from '@/lib/auth'
-import Header from '@/components/Header'
-import EnhancedDashboard from '@/components/EnhancedDashboard'
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { verifyToken } from "@/lib/auth";
+import Header from "@/components/Header";
+import EnhancedDashboard from "@/components/EnhancedDashboard";
 
 export default async function AdminPage() {
-  const cookieStore = cookies()
-  const token = cookieStore.get('auth-token')?.value
+  const cookieStore = await cookies();
+  const token = cookieStore.get("auth-token")?.value;
 
   if (!token) {
-    redirect('/login')
+    redirect("/login");
   }
 
-  const user = verifyToken(token)
-  if (!user || user.role !== 'ADMIN') {
-    redirect('/login')
+  const user = verifyToken(token);
+  if (!user || user.role !== "ADMIN") {
+    redirect("/login");
   }
 
   return (
@@ -24,5 +24,5 @@ export default async function AdminPage() {
         <EnhancedDashboard user={user} />
       </div>
     </div>
-  )
+  );
 }

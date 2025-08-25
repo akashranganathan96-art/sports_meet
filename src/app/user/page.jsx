@@ -5,8 +5,9 @@ import UserVotingInterface from '@/components/UserVotingInterface'
 import Header from '@/components/Header'
 
 export default async function UserPage() {
-  const cookieStore = cookies()
-  const token = cookieStore.get('auth-token')?.value
+const cookieStore = await cookies()
+const token = cookieStore.get('auth-token')?.value
+
 
   if (!token) {
     redirect('/login')

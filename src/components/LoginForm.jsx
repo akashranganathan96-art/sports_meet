@@ -30,6 +30,7 @@ export default function LoginForm() {
       if (response.ok) {
         // Redirect based on user role
         if (data.user.role === 'ADMIN') {
+          console.log("/admin")
           router.push('/admin')
         } else {
           router.push('/user')

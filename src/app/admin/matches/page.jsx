@@ -5,8 +5,9 @@ import Header from '@/components/Header'
 import MatchesManagement from '@/components/MatchesManagement'
 
 export default async function MatchesPage() {
-  const cookieStore = cookies()
-  const token = cookieStore.get('auth-token')?.value
+const cookieStore = await cookies()
+const token = cookieStore.get('auth-token')?.value
+
 
   if (!token) {
     redirect('/login')
